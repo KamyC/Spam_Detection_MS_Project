@@ -1,0 +1,21 @@
+.main{
+    background: #2b3137;
+    height: 670px;
+    width: 100%;
+    border: 0px;
+    color: white;
+    padding-top: 100px;
+    /*display: flex;*/
+}
+.main-container{
+    width: 800px;
+    margin-left: 10%;
+    display: inline-block;
+}
+.img-container{
+    display: inline-block;
+}
+.img-container img {
+    margin-bottom: 200px;
+    margin-left: 85px;
+}

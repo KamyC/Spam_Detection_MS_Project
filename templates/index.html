@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="../static/css/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main-search.css') }}">
+  <script>
+     $(document).ready(function(){
+        var res  = '{{ res | safe}}'
+        // console.log(res)
+        if(res){
+            $(".ground-truth-btns").show();
+        }
+         $(".confirm-btn").click(function (){
+            $(".ground-truth-btns").hide();
+            $(".confirm-response").show();
+            $.ajax({
+              type: 'POST',
+              dataType: 'text',
+              url: '/confirm_tweet',
+              data: {label: "confirm"},
+              traditional: true,
+              success: function (data) {
+                  console.log("send to backend")
+              }
+            });
+         })
+         $(".deny-btn").click(function (){
+            $(".ground-truth-btns").hide();
+            $(".deny-response").show();
+            $.ajax({
+              type: 'POST',
+              dataType: 'text',
+              url: '/deny_tweet',
+              data: {label: "deny"},
+              traditional: true,
+              success: function (data) {
+                  console.log("send to backend")
+              }
+            });
+         })
+         $(".help-btn").click(function (){
+            $(".ground-truth-btns").hide();
+            $(".help-response").show();
+            $.ajax({
+              type: 'POST',
+              dataType: 'text',
+              url: '/help_tweet',
+              data: {label: "confirm"},
+              traditional: true,
+              success: function (data) {
+                  console.log("send to backend")
+              }
+            });
+         })
+         // $("#updateDB").click(function (){
+         //    $.ajax({
+         //      type: 'POST',
+         //      dataType: 'text',
+         //      url: '/update_db',
+         //      data: {label: "confirm"},
+         //      traditional: true,
+         //      success: function (data) {}
+         //    });
+         // })
+     })
+  </script>
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="main">
+<!--    <button id = "updateDB">UPDATE</button>-->
+    <form action="{{ url_for('detect')}}" method="POST" class="input">
+      <div class="input-group input-group-lg">
+          <input type="text" class="form-control" aria-describedby="inputGroup-sizing-lg" name="content">
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn btn-primary btn-md detect" name="detect" id="detectBtn">Detect Spam</button>
+        <button type="submit" class="btn btn-secondary btn-md report" name="report">Report Spam</button>
+      </div>
+    </form>
+    <div>
+      <span style="color:red; font-weight:bold;">
+      {{ isSpam }}
+      </span>
+      <span style="color:green; font-weight:bold;">
+      {{ notSpam }}
+      </span>
+      <span style="color:blue; font-weight:bold;">
+      {{ getReport }}
+      </span>
+    </div>
+    <div class="ground-truth-btns" style="display: none;">
+      <input type="button" value="No, it is not" class="deny-btn">
+      <input type="button" value="Yes,confirm" class="confirm-btn">
+      <input type="button" value="Not Sure? Help" class="help-btn">
+    </div>
+    <div>
+      <div class="confirm-response" style="display: none;"><p>Thanks for Your Confirmation!</p></div>
+      <div class="deny-response" style="display: none;"><p>Thanks for Your Response!</p></div>
+      <div class="help-response" style="display: none;"><p>This Tweet Has Been Sent to Admin, Thank You!</p></div>
+    </div>
+  </div>
+
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

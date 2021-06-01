@@ -1,0 +1,13 @@
+.service-main{
+    /*border:1px solid #2b3137;*/
+    width: 60%;
+    height: 100%;
+    margin: 0 auto;
+}
+.service-title{
+    width: 100%;
+    border-bottom: #d6d6d6 1px solid;
+}
+.api-content , td{
+    font-size: 16px;
+}

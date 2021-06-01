@@ -1,0 +1,77 @@
+.spam > p{
+    margin-bottom: 0;
+}
+.benign > p{
+    margin-bottom: 0;
+}
+.left{
+    padding:10px;
+}
+.up{
+    width: 100%;
+    height: 50%;
+    padding-bottom: 5px;
+    /*border: 1px solid black;*/
+    display: flex;
+}
+
+.down{
+    width: 100%;
+    height: 50%;
+    padding-top: 5px;
+    /*border: 1px solid black;*/
+    display: flex;
+
+}
+
+.panel{
+    padding: 10px;
+    box-shadow: 2px 2px 3px #888888;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.panel > p{
+    display: block;
+}
+.spam{
+    border-bottom: #2b3137 dashed 1px;
+    line-height: 1.5rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    color:red;
+}
+.benign{
+    border-bottom: #2b3137 dashed 1px;
+    line-height: 1.5rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    color:lightgreen;
+}
+.font-bold{
+    font-weight: bold;
+    margin-left: 3px;
+    white-space:nowrap
+}
+.select-date{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.select-date > p {
+    margin-bottom: 0px;
+}
+
+#getDateFrame{
+    margin-left: 10px;
+}
+.expand{
+    border: 1px solid black;
+    background: none;
+    margin-left: 5px;
+    margin-right: 5px;
+}

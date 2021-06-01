@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/service-page.css') }}">
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="sign col-2">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="main">
+    <div class="service-title">
+        <p style="margin-left: 20%; font-size: 28px; margin-bottom: 0px; line-height: 2.5;">Service APIs</p>
+      </div>
+    <div class="service-main">
+      <div class="service-intro">
+        <p style="margin-top: 3%;">We have provided 3 APIs for registered and non-registered users to detect and report tweets. Non-registered users can
+          get the results produced by an initial ML model. Registered users can input invoke the APIs by passing login information and tweets for detection or report
+        </p>
+      </div>
+      <div class="service-apis">
+        <p style="font-size: 30px; color: #e96e50;">Using Our APIs to Detect and Report Spam</p>
+        <table class="table table-bordered">
+          <thread>
+            <tr>
+              <th scope="col">API Call</th>
+              <th scope="col">Parameters</th>
+              <th scope="col">Usage</th>
+            </tr>
+          </thread>
+          <tbody class="api-content">
+            <tr>
+              <td>http://127.0.0.1:5000/api/detect/public?tweets=<span style="color:red;">{tweet content}</span></td>
+              <td><span style="color:red;">tweet content | </span> The tweet content you would like to detect, applicable for non-registered users</td>
+              <td>Use public model to detect an input tweet</td>
+            </tr>
+            <tr>
+              <td>http://127.0.0.1:5000/api/detect/user?email=<span style="color:red;">{email}</span>&psw=<span style="color: red">{password}</span>&tweets=<span style="color: red">{tweet content}</span></td>
+              <td>
+                <span style="color:red;">email, password | </span> email and password that you need to login your account<br>
+
+                <span style="color:red;">tweet content | </span> The tweet content you would like to detect, applicable for registered users<br>
+              </td>
+              <td>Login user's account and use user-specific model to detect an input tweet</td>
+            </tr>
+             <tr>
+              <td>http://127.0.0.1:5000/api/report/user?email=<span style="color:red;">{email}</span>&psw=<span style="color: red">{password}</span>&tweets=<span style="color: red">{tweet content}</span></td>
+              <td>
+                <span style="color:red;">email, password | </span> email and password that you need to login your account<br>
+
+                <span style="color:red;">tweet content | </span> The tweet content you would like to report, applicable for registered users<br>
+              </td>
+              <td>Login user's account and feed a tweet with confirmed label to a user-specific model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

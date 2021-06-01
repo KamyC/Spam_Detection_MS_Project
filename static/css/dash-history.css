@@ -1,0 +1,27 @@
+.main-content{
+  display: block;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+.head{
+  display: flex;
+}
+.spam{
+    border-bottom: 1px dashed #d8d9da;
+    margin-bottom: 10px;
+    text-align: left;
+    display: flex;
+}
+
+.checkbox[type=checkbox] {
+    transform: scale(1.5);
+}
+.custom-switch{
+    float: right;
+}
+.main{
+    height: auto!important;
+}
+.pages{
+    text-align: right;
+}

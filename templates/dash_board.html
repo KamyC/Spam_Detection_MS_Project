@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="../static/css/jquery-ui.css">
+  <script src="../static/css/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="static/css/Chart.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+  <script defer src="static/css/all.min.js"></script>
+  <script src="../static/css/jquery-ui.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/overview.css') }}">
+
+  <script>
+    function updatePieChart(spam_cnt,benign_cnt){
+        if(window.pieChart && window.pieChart!==null){
+          window.pieChart.destroy()
+        }
+
+        window.pieChart = new Chart($("#pieChart"), {
+          type: 'pie',
+          data: {
+            labels: ['Spam', 'Benign'],
+            datasets: [{
+              data: [spam_cnt, benign_cnt],
+              backgroundColor: [ '#36A2EB','#FF6384']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              labels: {
+                render: 'percentage',
+                fontColor: ['green', 'white'],
+                precision: 2
+              }
+            },
+          }
+      }).update();
+    }
+    function updateBarChart(spam_cnt,benign_cnt){
+        if(window.barChart && window.barChart!==null){
+            window.barChart.destroy()
+        }
+        window.barChart = new Chart($('#spamRate'), {
+        type: 'bar',
+        data: {
+            labels: ['Spam', 'Benign'],
+            datasets: [{
+                label:'Count of Each Tweets',
+                data: [spam_cnt, benign_cnt],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+              labels: false
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+        }
+        });
+    }
+    function updateTotalNum(totalNum){
+        $("#total_num").text(totalNum)
+    }
+    function updateTweets(tweets){
+        $('#recent-tweets').empty()
+        len = tweets.length>10 ? 10 : tweets.length;
+        for(var i =0;i<len;i++){
+            let label = tweets[i][0];
+            let date = tweets[i][1];
+            let content = tweets[i][2];
+            var li;
+            if (label == "sus_benign" || label =="con_benign"){
+                li = $('<li/>').addClass('benign')
+                let span = $('<span/>').addClass('badge badge-success').text('Benign')
+                let div = $('<div/>').append(span)
+                li.append(div)
+            }
+            else {
+                li = $('<li/>').addClass('spam')
+                let span = $('<span/>').addClass('badge badge-danger').text('Spam')
+                let div = $('<div/>').append(span)
+                li.append(div)
+            }
+            if (content.length> 100){
+                let btn = $('<button/>').addClass('expand').text("+")
+                let div = $('<div/>').append(btn)
+                li.append(div)
+            }
+            else {}
+            var p_date = $('<p/>').text(date).addClass('font-bold')
+            li.append(p_date)
+            content = content.length> 100 ? content.slice(0,100)+"......" : content;
+            var p = $('<p/>').append(": "+content)
+            //finally
+            li.append(p)
+            $('#recent-tweets').append(li)
+        }
+    }
+    function expandIcon(allTweets){
+        $(".expand").click(function (){
+            console.log("works");
+            let id = $(this).parent().parent('li').index()
+            let newT = ": "+allTweets[id][2];
+            let oldT = $(this).parent().next().next().text()
+            console.log(newT)
+            $(this).parent().next().next().text( $(this).parent().next().next().text() == oldT ? newT : oldT)
+            $(this).text("-")
+        })
+    }
+    $(document).ready(function(){
+        //for totoal search number
+        var data = JSON.parse('{{ data | tojson | safe}}');
+        console.log(data)
+        //for spam rate
+        var spam_cnt = data["spam_cnt"]
+        var benign_cnt = data["benign_cnt"]
+        window.barChart = new Chart(document.getElementById('spamRate'), {
+        type: 'bar',
+        data: {
+            labels: ['Spam', 'Benign'],
+            datasets: [{
+                label:'Count of Each Tweets',
+                data: [spam_cnt, benign_cnt],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+              labels: false
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+        }
+        });
+        //for search history
+        var time_cnt = data["time_cnt"]
+        time_line = []
+        count_line = []
+        Object.keys(time_cnt).forEach(function(key) {
+            time_line.push(key)
+            count_line.push(time_cnt[key])
+        });
+        new Chart(document.getElementById("searchHistory"), {
+          type: 'line',
+          data: {
+            labels: time_line,
+            datasets: [{
+                data: count_line,
+                label: "Count",
+                borderColor: "#3e95cd",
+                fill: false
+              },
+            ]
+          },
+          options: {
+              legend: {
+                display: false
+            },
+          }
+        });
+        //for pie chart
+        window.pieChart = new Chart(document.getElementById("pieChart"), {
+          type: 'pie',
+          data: {
+            labels: ['Spam', 'Benign'],
+            datasets: [{
+              data: [spam_cnt, benign_cnt],
+              backgroundColor: [ '#36A2EB','#FF6384']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              labels: {
+                render: 'percentage',
+                fontColor: ['green', 'white'],
+                precision: 2
+              }
+            },
+          }
+      });
+        last_ten = data['last_ten'];
+        //listen to start and end date
+        $( "#startDate" ).datepicker({ dateFormat: 'yy-mm-dd' })
+        $( "#endDate" ).datepicker({ dateFormat: 'yy-mm-dd' })
+
+        $("#getDateFrame").click(function (){
+            var startDate = $( "#startDate" ).datepicker({ dateFormat: 'yy-mm-dd' }).val()
+            var endDate = $( "#endDate" ).datepicker({ dateFormat: 'yy-mm-dd' }).val()
+            if (startDate > endDate){
+                let spam_cnt = 0
+                let benign_cnt = 0
+                let total_cnt = spam_cnt+benign_cnt
+                updatePieChart(spam_cnt,benign_cnt)
+                updateBarChart(spam_cnt,benign_cnt)
+                updateTotalNum(total_cnt)
+            }
+            else{
+              $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              url: '/get_date_frame',
+              data: {startDate: startDate, endDate: endDate},
+              traditional: true,
+              success: function (data) {
+                  let spam_cnt = data["spam_cnt"]
+                  let benign_cnt =data["benign_cnt"]
+                  let total_cnt = spam_cnt+benign_cnt
+                  updatePieChart(spam_cnt,benign_cnt)
+                  updateBarChart(spam_cnt,benign_cnt)
+                  updateTotalNum(total_cnt)
+                  let tweets =data["tweets"]
+                  console.log(tweets)
+                  updateTweets(tweets)
+                  expandIcon(tweets)
+              }
+            });
+            }
+        })
+
+        $(".expand").click(function (){
+            console.log("works");
+            let id = $(this).parent().parent('li').index()
+            let newT = last_ten[id][3];
+            let oldT = $(this).parent().next().next().text()
+            console.log(id)
+            $(this).parent().next().next().text( $(this).parent().next().next().text() == oldT ? newT : oldT)
+            $(this).text("-")
+        })
+
+    });
+  </script>
+
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+      </div>
+  </div>
+  <div class="main" style="height: auto!important;">
+    <div class="wrapper">
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>TweetSafe</h3>
+        </div>
+         <ul class="list-unstyled components">
+            <li class="box active">
+                <i class="fas fa-user fa-2x"></i>
+                <a href="{{ url_for('toDashBoard')}}">Overview</a>
+            </li>
+            <li class="box">
+              <i class="fas fa-history fa-2x"></i>
+              <a href="{{ url_for('toHistory')}}">History</a>
+            </li>
+            <li class="box">
+              <i class="fas fa-chart-bar fa-2x"></i>
+              <a href="{{ url_for('toVisualization')}}">Visualization</a>
+            </li>
+        </ul>
+      </nav>
+      <div class="main-content">
+        <div class="col-6 left">
+          <div class="up">
+            <div class="panel">
+              <div>
+                <p>Total Search Number: </p>
+                <p style="font-size: 100px; text-align: center" id = "total_num">{{total_number}}</p>
+              </div>
+            </div>
+            <div class="panel">
+              <canvas id="spamRate" width="250" height="180"></canvas>
+            </div>
+          </div>
+          <div class="down">
+            <div class="panel">
+              <canvas id="searchHistory" width="800" height="450"></canvas>
+            </div>
+            <div class="panel">
+              <canvas id="pieChart" width="800" height="450"></canvas>
+            </div>
+          </div>
+          <div class="date-pick select-date">
+            <p>Start Date <input type="text" id="startDate" class="col-6"></p>
+            <p>End Date <input type="text" id="endDate" class="col-6"></p>
+            <button id="getDateFrame" type="button" class="btn btn-primary col-4">Select Date Range</button>
+          </div>
+        </div>
+        <div class="col-6 right">
+          <h4>Most Recent Tweets</h4>
+          <ul class="list-unstyled components" id="recent-tweets">
+          {% for tweet in tweets %}
+            {% if tweet[0]=='sus_spam' or tweet[0]=='con_spam' %}
+            <li class="spam">
+              <div>
+                <span class="badge badge-danger">Spam</span>
+              </div>
+              {% if tweet[3]|length > 100  %}
+              <div>
+                <button class="expand">+</button>
+              </div>
+              <p class="font-bold">{{tweet[2]}}</p>:
+              <p>{{tweet[3][:100]}}......</p>
+              {% else %}
+              <p class="font-bold"> {{tweet[2]}}</p>:
+              <p>{{tweet[3]}}</p>
+              {% endif %}
+            </li>
+            {% else %}
+            <li class="benign">
+              <div>
+                <span class="badge badge-success">Benign</span>
+              </div>
+              {% if tweet[3]|length > 100  %}
+                <div>
+                  <button class="expand">+</button>
+                </div>
+                <p class="font-bold">{{tweet[2]}}</p>:
+                <p>{{tweet[3][:100]}}......</p>
+              {% else %}
+                <p class="font-bold"> {{tweet[2]}}</p>:
+                <p>{{tweet[3]}}</p>
+              {% endif %}
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

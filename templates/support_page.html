@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/support-page.css') }}">
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="main">
+    <div class="support-container">
+      <div class="text-body">
+        <h4 style="margin-top: 10px">Technical Support</h4>
+        <p>
+          We are at the initial stage of applying traditional ML training method to build
+          a base model. We so far have tested KNN, naive bayes and logistic regression approaches to
+          train the base model using dataset we have collected from Twitter.
+        </p>
+        <table class="table">
+            <tr>
+              <th scope="col">ML Approach</th>
+              <th scope="col">Accuracy</th>
+              <th scope="col">Recall</th>
+              <th scope="col">Precision</th>
+            </tr>
+          <tbody class="tbody">
+            <tr>
+              <td>KNN</td>
+              <td>79.75%</td>
+              <td>91.06%</td>
+              <td>74.55%</td>
+            </tr>
+            <tr>
+              <td>Naive Bayes</td>
+              <td>90.41%</td>
+              <td>83.30%</td>
+              <td>97.30%</td>
+            </tr>
+            <tr>
+              <td>Logistic Regression</td>
+              <td>87.76%</td>
+              <td>90.11%</td>
+              <td>86.46%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size: 20px; font-weight: bold">
+          On-going Model Maintenance
+        </p>
+        <p>
+          Since we are using online learning method to feed and update models. For any registered user with a user-specific model, every
+          tweet fed to the model will help to improve the accuracy of detection result. It is noted that different users may hold varying standard
+          regarding "spam" tweets. Therefore, it is very likely to deliver opposite labels from two different user models. Such divergence originates from users'
+          involvement in confirming if model's label for certain tweet is correct or not. We will keep updating the base model and consider other algorithms to
+          improve the accuracy. Moreover, we will deliver more APIs to access our ML model for any researchers who are interested in tweet spam detection.
+        </p>
+      </div>
+      <div class="right-panel">
+        <img class="tech-pic" src="../static/img/technical.png"/>
+        <p style="font-weight: bold"> We provide following technical supports: </p>
+        <li> Users can send help to Admin for any suspected tweets. Admin can help confirm the tweets' label </li>
+        <li> We are currently applying logistic regression to achieve the online learning approach. We can also provide more
+          algorithmic support by integrating other machine learning models
+        </li>
+        <li>
+          More open APIs will be developed to public for any research purpose. Any registered users can call our service APIs in their own project
+        </li>
+        <li>
+          Data visualization interface is accessible for registered users by gathering the past input tweets. We can provide service to abstract and visualize
+          given datasets of spam tweets.
+        </li>
+      </div>
+    </div>
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

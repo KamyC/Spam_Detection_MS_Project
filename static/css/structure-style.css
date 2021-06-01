@@ -1,0 +1,75 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+
+/*banner*/
+.banner{
+	width: 100%;
+	height: 125px;
+	background: #2b3137;
+	display: inline-flex;
+	align-items: center;
+	margin-right: 0px;
+	color: #fff;
+}
+.banner .title{
+	font-size: 45px;
+	margin-left:2%;
+	font-weight: bold;
+}
+.tag-item > a, .title > a, .sign-up > a, .sign > a {
+	text-decoration: none;
+	color: white
+}
+.tag-item{
+	display: inline-block;
+	margin-right:60px;
+	font-size: 17px;
+}
+
+.banner > .sign {
+	display: inline;
+	text-align: right;
+	margin-right: 1%;
+	margin-top: 75px;
+}
+.banner .sign-up  {
+	display: inline-block;
+	color: #fff;
+	width: 100px;
+	margin-bottom: 0px;
+	text-align: center;
+}
+.sign-up:hover{
+	border: 1px solid white;
+}
+.tag-item:hover	{
+	border: 1px solid #666666;
+}
+
+/*main*/
+.main{
+	width: 100%;
+	height: 670px;
+	border: 1px solid beige;
+}
+
+/*footer*/
+.footer{
+    background: #ebebea;
+    width: 100%;
+    padding: 1%;
+    margin-bottom: 0px;
+}
+.contacts{
+    line-height: 1;
+    margin:0 10% 0 10%;;
+    color: #666666;
+    font-size: 14px;
+}
+.subtitle{
+    font-size: 16px;
+    font-weight: bold;
+}
+

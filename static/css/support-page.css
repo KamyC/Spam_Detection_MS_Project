@@ -1,0 +1,39 @@
+.support-container{
+    width: 50%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+}
+.text-body{
+    height: 100%;
+    width: 60%;
+    margin-right: 10px;
+
+}
+.text-body > p{
+    color: #666666;
+    font-size: 16px ;
+}
+.right-panel{
+    border:1px solid #d6d6d6;
+    width: 40%;
+    margin: 20px;
+    padding: 10px;
+}
+.right-panel > p, li {
+    color: #666666;
+    font-size: 16px ;
+    margin-top: 10px;
+}
+.tech-pic{
+    width:100%;
+    border-bottom: #d6d6d6 1px solid;
+}
+.table th{
+    padding: 5px;
+    font-size: 14px;
+}
+.tbody td{
+    padding: 5px;
+        font-size: 14px;
+}

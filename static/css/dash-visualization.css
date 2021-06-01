@@ -1,0 +1,21 @@
+.cloud-container{
+    width: 100%;
+}
+.cloud-imgs{
+    height: 90%;
+    margin: 20px;
+    display: flex;
+}
+
+.spam-box{
+    width: 50%;
+}
+
+.benign-box{
+    width: 50%;
+}
+.cloud-imgs img{
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}

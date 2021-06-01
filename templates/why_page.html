@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/why-page.css') }}">
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-container">
+      <h3> Built for Spam Detection </h3>
+      <p> This is a web-based application for my MS project. It integrates a machine learning model using online learning approach to detect spam tweets. I build it for 4 main purposes： </p>
+      <ul>
+        <li>To allow any Twitter users to detect if a particular tweet is spam or not. This will prevent users from being deceived by spam information </li>
+        <li>To provide users with personalized dashboard to raise their awareness about the features of a spam tweet</li>
+        <li>To provide open APIs for any people who are interested in using this machine learning model </li>
+        <li>To benefit any Twitter users to quickly detect spam using Chrome extension support.</li>
+      </ul>
+    </div>
+    <div class="img-container">
+      <img src="./static/img/introduction.png">
+    </div>
+
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+.container{
+    margin:0 auto;
+    margin-top:1%;
+    width: 500px;
+    padding-bottom: 1%;
+    background: white;
+}
+.create-title{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.submit-button{
+    text-align: right;
+}
+#remind{
+    text-align: right;
+    color: red;
+    font-size: 13px;
+}
+#user_pass{
+    text-align: right;
+    color: green;
+    font-size: 13px;
+}
+#user_deny{
+    text-align: right;
+    color: red;
+    font-size: 13px;
+}

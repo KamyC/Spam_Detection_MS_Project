@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dash-visualization.css') }}">
+  <script defer src="static/css/all.min.js"></script>
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="main">
+    <div class="wrapper">
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>TweetSafe</h3>
+        </div>
+         <ul class="list-unstyled components">
+            <li class="box ">
+                <i class="fas fa-user fa-2x"></i>
+                <a href="{{ url_for('toDashBoard')}}">Overview</a>
+            </li>
+            <li class="box ">
+              <i class="fas fa-history fa-2x"></i>
+              <a href="{{ url_for('toHistory')}}">History</a>
+            </li>
+            <li class="box active">
+              <i class="fas fa-chart-bar fa-2x"></i>
+              <a href="{{ url_for('toVisualization')}}">Visualization</a>
+            </li>
+        </ul>
+      </nav>
+      <div class="cloud-container">
+        <p style="font-size: 24px; margin-left: 20px; font-weight: bold;">Spam and Benign Word Cloud</p>
+        <div class="cloud-imgs">
+          <div class="spam-box">
+            <p style="font-size: 22px;font-weight: bold; text-align: center; color: coral ">Spam Word Cloud</p>
+            <img src="static/img/{{ spamWordCloud }}">
+          </div>
+          <div class="benign-box">
+            <p style="font-size: 22px;font-weight: bold; text-align: center; color: aquamarine" >Benign Word Cloud</p>
+            <img src="static/img/{{ benignWordCloud }}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

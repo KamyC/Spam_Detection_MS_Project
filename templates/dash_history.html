@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Tweet Spam Detection</title>
+  <script src="../static/css/jquery-3.5.1.min.js"></script>
+  <script defer src="static/css/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/structure-style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dash-history.css') }}">
+  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+  <script>
+      // var page = 1;
+      $(document).ready(function(){
+        // var covered = 15;
+        $("#lock-btn").click(function (){
+            $(".label-btn").bootstrapToggle('disable')
+        })
+        $("#unlock-btn").click(function (){
+            $(".label-btn").bootstrapToggle('enable')
+        })
+        $(".label-btn").change(function (){
+            console.log($(this).parent().parent().parent().parent().attr("id")); //get corresponding ID
+            var id = $(this).parent().parent().parent().parent().attr("id")
+            let label = "sus_benign";
+            if ($(this).is(":checked")){
+                // console.log("work")
+                label = "sus_spam"
+            }
+            $.ajax({
+              type: 'POST',
+              dataType: 'text',
+              url: '/dash_history_checkbox',
+              data: {tID: id, label: label},
+              traditional: true,
+              success: function (data) {
+                  console.log(data)
+              }
+            });
+        })
+      })
+  </script>
+</head>
+<body>
+  <div class="row banner">
+    <div class="title col-4"><a href="{{ url_for('home')}}">Spam Tweet Detector</a></div>
+    <div class="col-5 tags">
+      <div class="tag-item"><a href="{{ url_for('toWhyPage')}}">Introduction</a></div>
+      <div class="tag-item"><a href="{{ url_for('toServicePage')}}">Service API</a></div>
+      <div class="tag-item"><a href="{{ url_for('toSupportPage')}}">Technical Support</a> </div>
+      <div class="tag-item"><a href="{{ url_for('toDashBoard')}}">My Dashboard</a></div>
+    </div>
+    <div class="col-2 sign">
+      {% if userName %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+          {{userName}}
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('logOut')}}">Log out</a>
+        </div>
+      </div>
+      {% else %}
+      <p class="sign-up"><a href="{{ url_for('toSignIn')}}">{{signIn}}</a></p>
+      <p class="sign-up"><a href="{{ url_for('toSignUp')}}">{{singUp}}</a></p>
+      {% endif %}
+      </div>
+  </div>
+  <div class="main">
+    <div class="wrapper">
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>TweetSafe</h3>
+        </div>
+         <ul class="list-unstyled components">
+            <li class="box ">
+                <i class="fas fa-user fa-2x"></i>
+                <a href="{{ url_for('toDashBoard')}}">Overview</a>
+            </li>
+            <li class="box active">
+              <i class="fas fa-history fa-2x"></i>
+              <a href="{{ url_for('toHistory')}}">History</a>
+            </li>
+            <li class="box">
+              <i class="fas fa-chart-bar fa-2x"></i>
+              <a href="{{ url_for('toVisualization')}}">Visualization</a>
+            </li>
+        </ul>
+      </nav>
+      <div class="main-content">
+        <div class="head row">
+          <h4 class="col">Detect History </h4>
+          <button class="btn btn-primary" id="unlock-btn" style="margin-right: 10px;">Unlock</button>
+          <button class="btn btn-secondary" id="lock-btn">Lock</button>
+
+          <h4 class="col" style="text-align: right;margin-right: 45px;">Label</h4>
+        </div>
+        <ul class="list-unstyled components">
+          {% for tweet in tweets %}
+          <li class="spam" id ={{tweet[0]}}>
+            <div class="col-sm-11">
+              {{tweet[0]}}. <span style="font-weight: bold;">{{tweet[1]}}</span>: {{tweet[2]}}
+            </div>
+            <div class="col-sm-1">
+              {% if tweet[2] =="sus_spam" or tweet[2] =="con_spam" %}
+              <div class="toggle-div">
+                <input type="checkbox" checked data-toggle="toggle" data-size="xs" data-on="Spam" data-off="Benign" class="label-btn">
+              </div>
+              {% else %}
+              <div class="toggle-div">
+                <input type="checkbox" data-toggle="toggle" data-size="xs" data-on="Spam" data-off="Benign" class="label-btn">
+              </div>
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="pages">
+          <a class="btn btn-link" id="pre_page" href="{{ url_for('getPrevFifteenTweets')}}"><i class="fas fa-angle-double-left"></i> Previous Page</a>
+          <a class="btn btn-link" id="next_page" href="{{ url_for('getNextFifteenTweets') }} ">Next Page <i class="fas fa-angle-double-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="img-container footer">
+      <div class="row contacts">
+          <div class="col">
+              <p class="subtitle">Contact</p>
+              <p>Email: xxxxxx@sfsu.edu</p>
+              <p>Telephone: (xxx) xxx-xxxx</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Location</p>
+              <p>1600 Holloway Avenue, SCI 163</p>
+              <p>San Francisco, CA 94132</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Technical Support</p>
+              <p>Monday - Thursday 9 a.m. - 5 p.m.</p>
+              <p>Friday 9 a.m. - 4 p.m.</p>
+          </div>
+          <div class="col">
+              <p class="subtitle">Quick Links</p>
+              <p>xxxxxxx</p>
+              <p>xxxxx @ SF State</p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>
